@@ -22,7 +22,6 @@ import gtk
 import logging
 import pango
 from sugar.graphics import style
-import simplejson
 
 from gettext import gettext as _
 
