@@ -1,0 +1,8 @@
+COPYING
+setup.py
+activity.py
+textdungeon.py
+sampledungeon.txt
+activity/activity-textdungeon.svg
+activity/activity.info
+po/HelloWorld.pot

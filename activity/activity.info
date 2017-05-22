@@ -1,0 +1,8 @@
+[Activity]
+name = Textdungeon
+activity_version = 3
+bundle_id = org.sugarlabs.Textdungeon
+exec = sugar-activity activity.TextdungeonActivity
+mime_types = text/plain 
+icon = activity-textdungeon
+license = GPLv2+
