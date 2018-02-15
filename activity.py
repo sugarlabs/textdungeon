@@ -38,72 +38,72 @@ from sugar3.activity.widgets import ShareButton
 class TextdungeonActivity(activity.Activity):
     """TextdungeonActivity class as specified in activity.info"""
     def __init__(self, handle):
-    """Set up the Textdungeon activity."""
-    activity.Activity.__init__(self, handle)
+        """Set up the Textdungeon activity."""
+        activity.Activity.__init__(self, handle)
 
-    # we do not have collaboration features
-    # make the share option insensitive
-    self.max_participants = 1
+        # we do not have collaboration features
+        # make the share option insensitive
+        self.max_participants = 1
 
-    toolbar_box = ToolbarBox()
+        toolbar_box = ToolbarBox()
 
-    activity_button = ActivityButton(self)
-    toolbar_box.toolbar.insert(activity_button, 0)
-    activity_button.show()
+        activity_button = ActivityButton(self)
+        toolbar_box.toolbar.insert(activity_button, 0)
+        activity_button.show()
 
-    title_entry = TitleEntry(self)
-    toolbar_box.toolbar.insert(title_entry, -1)
-    title_entry.show()
+        title_entry = TitleEntry(self)
+        toolbar_box.toolbar.insert(title_entry, -1)
+        title_entry.show()
 
-    share_button = ShareButton(self)
-    toolbar_box.toolbar.insert(share_button, -1)
-    share_button.show()
+        share_button = ShareButton(self)
+        toolbar_box.toolbar.insert(share_button, -1)
+        share_button.show()
 
-    separator = Gtk.SeparatorToolItem()
-    separator.props.draw = False
-    separator.set_expand(True)
-    toolbar_box.toolbar.insert(separator, -1)
-    separator.show()
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        toolbar_box.toolbar.insert(separator, -1)
+        separator.show()
 
-    stop_button = StopButton(self)
-    toolbar_box.toolbar.insert(stop_button, -1)
-    stop_button.show()
-    self.set_toolbar_box(toolbar_box)
-    toolbar_box.show()
+        stop_button = StopButton(self)
+        toolbar_box.toolbar.insert(stop_button, -1)
+        stop_button.show()
+        self.set_toolbar_box(toolbar_box)
+        toolbar_box.show()
 
 
-    self.scrolled_window = Gtk.ScrolledWindow()
-    self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
-    self.scrolled_window.props.shadow_type = Gtk.ShadowType.NONE
-    self.textview = Gtk.TextView()
-    self.textview.set_editable(True)
-    self.textview.set_cursor_visible(True)
-    self.textview.set_wrap_mode(True)
-    self.textview.connect("key_press_event", self.keypress_cb)
+        self.scrolled_window = Gtk.ScrolledWindow()
+        self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scrolled_window.props.shadow_type = Gtk.ShadowType.NONE
+        self.textview = Gtk.TextView()
+        self.textview.set_editable(True)
+        self.textview.set_cursor_visible(True)
+        self.textview.set_wrap_mode(True)
+        self.textview.connect("key_press_event", self.keypress_cb)
 
-    self.scrolled_window.add(self.textview)
-    self.set_canvas(self.scrolled_window)
-    self.textview.show()
-    self.scrolled_window.show()
-    self.textview.grab_focus()
-    self.font_desc = Pango.FontDescription("sans %d" % style.zoom(8))
-    self.textview.modify_font(self.font_desc)
-    #        self.stringthing=""
+        self.scrolled_window.add(self.textview)
+        self.set_canvas(self.scrolled_window)
+        self.textview.show()
+        self.scrolled_window.show()
+        self.textview.grab_focus()
+        self.font_desc = Pango.FontDescription("sans %d" % style.zoom(8))
+        self.textview.modify_font(self.font_desc)
+        #        self.stringthing=""
 
-    self.loc =[0, 0]
-    self.direction =0
-    self.roomdata  =[]
-    self.items=[]
-    self.doors=[]
-    self.inventory=[]
-    self.keyboardentrystring=''
-    self.filecontents=''
-    self.printtobuf( 'Press h for help')
-    self.printtobuf( 'Use a text editor such as the Write Activity to edit this dungeon, create new ones or reset a dungeon\n')
-    self.printtobuf( 'You are in a dimly lit cavern ' + 'facing '+ compass(self.direction))
-    if handle.object_id==None:
-        readroomfile(self)                  #load the default room 
-    #        self.printtobuf( 'On the floor is'+ str(lookfloor(self.loc, self.items))+'\n\n')
+        self.loc =[0, 0]
+        self.direction =0
+        self.roomdata  =[]
+        self.items=[]
+        self.doors=[]
+        self.inventory=[]
+        self.keyboardentrystring=''
+        self.filecontents=''
+        self.printtobuf( 'Press h for help')
+        self.printtobuf( 'Use a text editor such as the Write Activity to edit this dungeon, create new ones or reset a dungeon\n')
+        self.printtobuf( 'You are in a dimly lit cavern ' + 'facing '+ compass(self.direction))
+        if handle.object_id==None:
+            readroomfile(self)                  #load the default room 
+        #        self.printtobuf( 'On the floor is'+ str(lookfloor(self.loc, self.items))+'\n\n')
 
 
     def printtobuf(self, addtext):
