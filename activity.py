@@ -19,12 +19,11 @@
 
 from textdungeon import starthere, readroomfile, compass, lookfloor
 #import gtk
-
 import gi
 #gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
-from gi.repository import GdkX11
+from gi.repository import Gdk
 from gi.repository import Pango
 import logging
 import sugar3
@@ -135,7 +134,7 @@ class TextdungeonActivity(activity.Activity):
         self.textview.scroll_mark_onscreen(endmark)
 
     def keypress_cb(self, widget, event):
-        keyname = GdkX11.keyval_name(event.keyval)
+        keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Return':
             starthere(self,self.keyboardentrystring) 
             self.keyboardentrystring=''
@@ -148,7 +147,7 @@ class TextdungeonActivity(activity.Activity):
             self.printtobuf(self.keyboardentrystring) 
         else:
             self.keyboardentrystring +=keyname 
-            self.printtobufnonewline (keyname)  
+            self.printtobufnonewline(keyname)  
         return True
 
 
