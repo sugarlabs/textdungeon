@@ -18,9 +18,8 @@
 """A text based dungeon."""
 
 from textdungeon import starthere, readroomfile, compass, lookfloor
-#import gtk
 import gi
-#gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 from gi.repository import GObject
 from gi.repository import Gdk
@@ -72,12 +71,6 @@ class TextdungeonActivity(activity.Activity):
 	self.set_toolbar_box(toolbar_box)
 	toolbar_box.show()
 
-	"""
-	else:
-	toolbox = activity.ActivityToolbox(self)
-	self.set_toolbox(toolbox)
-	toolbox.show()
-	"""
 
 	self.scrolled_window = Gtk.ScrolledWindow()
 	self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
