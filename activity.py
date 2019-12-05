@@ -145,7 +145,7 @@ class TextdungeonActivity(activity.Activity):
 
 
     def read_file(self, file_path):
-        print file_path
+        print(file_path)
         readroomfile(self,file_path)
                 
     def write_file(self, file_path):
