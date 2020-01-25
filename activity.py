@@ -84,7 +84,7 @@ class TextdungeonActivity(activity.Activity):
         self.textview.show()
         self.scrolled_window.show()
         self.textview.grab_focus()
-        self.font_desc = Pango.FontDescription("sans %d" % style.zoom(8))
+        self.font_desc = Pango.FontDescription("sans %d" % style.zoom(11))
         self.textview.modify_font(self.font_desc)
         #        self.stringthing=""
 
