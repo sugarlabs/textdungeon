@@ -17,17 +17,14 @@
 
 """A text based dungeon."""
 
-from textdungeon import starthere, readroomfile, compass, lookfloor
+from textdungeon import starthere, readroomfile, compass
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-from gi.repository import GObject
 from gi.repository import Gdk
 from gi.repository import Pango
-import logging
 import sugar3
 from sugar3.graphics import style
-from gettext import gettext as _
 from sugar3.activity import activity
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityButton
@@ -35,8 +32,10 @@ from sugar3.activity.widgets import TitleEntry
 from sugar3.activity.widgets import StopButton
 from sugar3.activity.widgets import ShareButton
 
+
 class TextdungeonActivity(activity.Activity):
     """TextdungeonActivity class as specified in activity.info"""
+
     def __init__(self, handle):
         """Set up the Textdungeon activity."""
         activity.Activity.__init__(self, handle)
@@ -71,9 +70,9 @@ class TextdungeonActivity(activity.Activity):
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
 
-
         self.scrolled_window = Gtk.ScrolledWindow()
-        self.scrolled_window.set_policy(Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
+        self.scrolled_window.set_policy(
+            Gtk.PolicyType.NEVER, Gtk.PolicyType.AUTOMATIC)
         self.scrolled_window.props.shadow_type = Gtk.ShadowType.NONE
         self.textview = Gtk.TextView()
         self.textview.set_editable(True)
@@ -90,21 +89,24 @@ class TextdungeonActivity(activity.Activity):
         self.textview.modify_font(self.font_desc)
         #        self.stringthing=""
 
-        self.loc =[0, 0]
-        self.direction =0
-        self.roomdata  =[]
-        self.items=[]
-        self.doors=[]
-        self.inventory=[]
-        self.keyboardentrystring=''
-        self.filecontents=''
-        self.printtobuf( 'Press h for help')
-        self.printtobuf( 'Use a text editor such as the Write Activity to edit this dungeon, create new ones or reset a dungeon\n')
-        self.printtobuf( 'You are in a dimly lit cavern ' + 'facing '+ compass(self.direction))
-        if handle.object_id==None:
-            readroomfile(self)                  #load the default room 
-        #        self.printtobuf( 'On the floor is'+ str(lookfloor(self.loc, self.items))+'\n\n')
-
+        self.loc = [0, 0]
+        self.direction = 0
+        self.roomdata = []
+        self.items = []
+        self.doors = []
+        self.inventory = []
+        self.keyboardentrystring = ''
+        self.filecontents = ''
+        self.printtobuf('Press h for help')
+        self.printtobuf(
+            'Use a text editor such as the Write Activity to edit this ' +
+            'dungeon, create new ones or reset a dungeon\n')
+        self.printtobuf('You are in a dimly lit cavern ' +
+                        'facing ' + compass(self.direction))
+        if handle.object_id is None:
+            readroomfile(self)  # load the default room
+            # self.printtobuf( 'On the floor is'+
+            # str(lookfloor(self.loc, self.items))+'\n\n')
 
     def printtobuf(self, addtext):
         self.printtobufnonewline('\n')
@@ -114,57 +116,53 @@ class TextdungeonActivity(activity.Activity):
 #        endmark=textbuffer.create_mark(None, itera)
 #        self.textview.scroll_mark_onscreen(endmark)
 
-
     def printtobufnonewline(self, addtext):
         textbuffer = self.textview.get_buffer()
 #        self.stringthing+=addtext
 #        textbuffer.set_text(self.stringthing)
 #        self.textview.set_buffer(textbuffer)
         textbuffer.insert_at_cursor(addtext)
-        itera=textbuffer.get_end_iter()
+        itera = textbuffer.get_end_iter()
 #        self.textview.scroll_to_iter(itera,0)
-        endmark=textbuffer.create_mark(None, itera)
+        endmark = textbuffer.create_mark(None, itera)
         self.textview.scroll_mark_onscreen(endmark)
 
     def keypress_cb(self, widget, event):
         keyname = Gdk.keyval_name(event.keyval)
         if keyname == 'Return':
-            starthere(self,self.keyboardentrystring) 
-            self.keyboardentrystring=''
-            self.printtobuf ('\n')
+            starthere(self, self.keyboardentrystring)
+            self.keyboardentrystring = ''
+            self.printtobuf('\n')
         elif keyname == 'space':
-            self.keyboardentrystring +=' ' 
-            self.printtobufnonewline (' ')  
+            self.keyboardentrystring += ' '
+            self.printtobufnonewline(' ')
         elif keyname == 'BackSpace':
-            self.keyboardentrystring =self.keyboardentrystring[:-1]
-            self.printtobuf(self.keyboardentrystring) 
+            self.keyboardentrystring = self.keyboardentrystring[:-1]
+            self.printtobuf(self.keyboardentrystring)
         else:
-            self.keyboardentrystring +=keyname 
-            self.printtobufnonewline(keyname)  
+            self.keyboardentrystring += keyname
+            self.printtobufnonewline(keyname)
         return True
-
 
     def read_file(self, file_path):
         print(file_path)
-        readroomfile(self,file_path)
-                
+        readroomfile(self, file_path)
+
     def write_file(self, file_path):
         ''' Write the project to the Journal. '''
 #        _logger.debug('Write file: %s' % file_path)
         self.metadata['mime_type'] = 'text/plain'
         fd = open(file_path, 'w')
-        text = self.filecontents + '<l,' +str(self.loc[0]) +',' + str(self.loc[1]) + '>\n' 
+        text = self.filecontents + '<l,' + \
+            str(self.loc[0]) + ',' + str(self.loc[1]) + '>\n'
         text = text + '<i'
         for x in self.inventory:
-            text=text+ ',' + x
-        text=text+'>\n' 
-        text=text+ '<u'
+            text = text + ',' + x
+        text = text + '>\n'
+        text = text + '<u'
         for i in self.items:
-            text=text+ ',' +str(i[0])+',' +str(i[1])+',' +i[2]
-        text=text+'>\n' 
-        text = text +'<end>'
+            text = text + ',' + str(i[0]) + ',' + str(i[1]) + ',' + i[2]
+        text = text + '>\n'
+        text = text + '<end>'
         fd.write(text)
         fd.close()
-
-
-
