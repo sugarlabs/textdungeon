@@ -77,9 +77,9 @@ def compass(direction):
 
 def readroomfile(self, filename='sampledungeon.txt'):
     print('opening ', filename)
-    f = open(filename, 'r+')
-    contents = f.read()  # + '                                '
-    self.filecontents = contents
+    f = open(filename, 'r')
+    contents = f.read() 
+    self.filecontents=contents
     f.close()
     print('file starts: ', contents[0:40])
     chara = 0
