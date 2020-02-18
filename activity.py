@@ -25,6 +25,7 @@ from gi.repository import Gdk
 from gi.repository import Pango
 from sugar3.graphics import style
 from sugar3.activity import activity
+from sugar3.graphics.style import FONT_SIZE
 from sugar3.graphics.toolbarbox import ToolbarBox
 from sugar3.activity.widgets import ActivityButton
 from sugar3.activity.widgets import TitleEntry
@@ -84,7 +85,7 @@ class TextdungeonActivity(activity.Activity):
         self.textview.show()
         self.scrolled_window.show()
         self.textview.grab_focus()
-        self.font_desc = Pango.FontDescription("sans %d" % style.zoom(8))
+        self.font_desc = Pango.FontDescription('sans %d' % (FONT_SIZE))
         self.textview.modify_font(self.font_desc)
         #        self.stringthing=""
 
