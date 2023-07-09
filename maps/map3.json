@@ -1,0 +1,106 @@
+{
+    "openning": "Game on! Get ready for an exciting adventure!",
+    "genericMsgs": {
+        "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
+        "invalidCmd": "Invalid command.3",
+        "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
+        "deadend": "You seem lost, try looking around to find a way",
+        "emptyInventory": "Your inventory is empty!",
+        "noItemHere": "No such item here!"
+    },
+    "currentRoom": "start",
+    "rooms": {
+        "start": {
+            "name": "start",
+            "requiredItem": "none",
+            "failToEnter": "none",
+            "description": "You are in the start room.",
+            "npcType": "none",
+            "npc": "none",
+            "items": [
+                "light"
+            ],
+            "north": "keyRoom",
+            "east": "exit"
+        },
+        "keyRoom": {
+            "name": "keyRoom",
+            "requiredItem": "light",
+            "failToEnter": "The key room is too dark, you need to find a light before entering",
+            "description": "With the light you can now see and you are able to enter the room",
+            "npcType": "none",
+            "npc": "none",
+            "items": [
+                "key"
+            ],
+            "south": "start",
+            "east" : "swordRoom"
+        },
+        "swordRoom": {
+            "name": "swordRoom",
+            "requiredItem": "key",
+            "failToEnter": "The door seems locked, find the key to open it",
+            "description": "You use the key to unlock the heavy door and enter the room of swords",
+            "npcType": "none",
+            "npc": "none",
+            "items": [
+                "sword"
+            ],
+            "south": "exit",
+            "west": "keyRoom"
+        },
+        "exit": {
+            "name": "exit",
+            "requiredItem": "sword",
+            "failToEnter": "There is a dragon in the room, to defeat him you need to find the sword",
+            "description": "You've found the princess and freed her from the dragon!",
+            "npcType": "enemies",
+            "npc": "dragon",
+            "items": []
+        }
+    },
+    "npcs": {
+        "traders": {
+            "name": "mage",
+            "description": "Has the key and trades it for gold",
+            "desires": "gold",
+            "sells": "key"
+        },
+        "thieves": {
+            "name": "thief",
+            "description": "The thief is looking for gold",
+            "desires": "gold",
+            "toDefeat": "elixir",
+            "youWin": "The elixir seems to work and the thief can't see you",
+            "youCannotLose": "The thief can see you but you have no coins for him to steal",
+            "youLose": "The thief can see you and with a swift motion he takes your gold"
+        },
+        "enemies": {
+            "name": "dragon",
+            "description": "The ultimate dragon",
+            "toDefeat": "sword",
+            "youWin": "You have masterfully used your sword and you've defeated the dragon",
+            "youLose": "Without your weapon you're defenseless and therefore defeated"
+        }
+    },
+    "items": {
+        "gold": {
+            "description": "You can use it for trade"
+        },
+        "light": {
+            "description": "Now you can see in the dark!"
+        },
+        "attackItem": {
+            "description": "Now you can have a fighting chance against mighty enemies"
+        },
+        "key": {
+            "description": "You can now unlock every door"
+        },
+        "book": {
+            "description": "You found the invisibility book, now you are invisible to all thieves"
+        }
+    },
+    "inventory": [
+
+    ]
+}

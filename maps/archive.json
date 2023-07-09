@@ -1,0 +1,93 @@
+{
+    "openning": "Game on! Get ready for an exciting adventure!",
+    "genericMsgs": {
+        "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
+        "invalidCmd": "Invalid command.",
+        "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
+        "deadend": "You seem lost, try looking around to find a way",
+        "emptyInventory": "Your inventory is empty!",
+        "noItemHere": "No such item here!"
+    },
+    "rooms": {
+        "start": {
+            "name": "start",
+            "requiredItem": "none",
+            "failToEnter": "none",
+            "description": "You are in the start room.",
+            "npcType": "traders",
+            "npc": "mage",
+            "items": [
+                "item1"
+            ],
+            "north": "dungeon",
+            "east": "exit"
+        },
+        "dungeon": {
+            "name": "dungeon",
+            "requiredItem": "lightSource",
+            "failToEnter": "The dungeon is too dark, you need to find a lightSource before entering",
+            "description": "Yooo you're in the dungeon",
+            "npcType": "thieves",
+            "npc": "thief",
+            "items": [
+                "item2",
+                "item3"
+            ],
+            "south": "start"
+        },
+        "exit": {
+            "name": "exit",
+            "requiredItem": "key",
+            "failToEnter": "To enter this room you have to find the key",
+            "description": "Welcome to the exit room, you managed to escape!",
+            "npcType": "traders",
+            "npc": "none",
+            "items": []
+        }
+    },
+    "npcs": {
+        "traders": {
+            "name": "mage",
+            "description": "Has the key and trades it for gold",
+            "desires": "gold",
+            "sells": "key"
+        },
+        "thieves": {
+            "name": "thief",
+            "description": "The thief is looking for gold",
+            "desires": "gold",
+            "toDefeat": "elixir",
+            "youWin": "The elixir seems to work and the thief can't see you",
+            "youCannotLose": "The thief can see you but you have no coins for him to steal",
+            "youLose": "The thief can see you and with a swift motion he takes your gold"
+        },
+        "enemies": {
+            "name": "skeleton queen",
+            "description": "The queen of all the skeletons, is very dangerous",
+            "toDefeat": "sword",
+            "youWin": "You masterfully use your sword and defeat the feared queen of the skeletons",
+            "youLose": "Without your weapon you're defenseless and therefore defeated"
+        }
+    },
+    "items": {
+        "gold": {
+            "description": "You can use it for trade"
+        },
+        "lightSource": {
+            "description": "Now you can see in the dark!"
+        },
+        "attackItem": {
+            "description": "Now you can have a fighting chance against mighty enemies"
+        },
+        "key": {
+            "description": "You can now unlock every door"
+        },
+        "book": {
+            "description": "You found the invisibility book, now you are invisible to all thieves"
+        }
+    },
+    "inventory": [
+        "gold",
+        "lightSource"
+    ]
+}

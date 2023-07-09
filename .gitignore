@@ -1,5 +1,7 @@
 *.pyc 
+*.pyo
 *.py~ 
 *.xo 
-*.pyo
 *.pkl
+tmp_*
+__pycache__/
