@@ -89,6 +89,12 @@ class TextdungeonActivity(activity.Activity):
         self.textview.set_wrap_mode(Gtk.WrapMode.WORD)
         self.textview.set_editable(False)
 
+        # Initialize the text buffer and text tag
+        # For changing the color of the outputing of the input text
+        self.text_buffer = self.textview.get_buffer()
+        self.custom_tag = self.text_buffer.create_tag(
+            "custom", foreground="#424548")
+
         # Add TextView to a ScrolledWindow
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_policy(
@@ -120,16 +126,20 @@ class TextdungeonActivity(activity.Activity):
 
     def on_activate(self, widget):
         command = widget.get_text()
+        self.print_to_textview(command, True)
         widget.set_text("")
         self.game.process_command(command)
 
-    def append_text(self, text):
+    def append_text(self, text, from_input=False):
         buffer = self.textview.get_buffer()
-        buffer.insert_at_cursor(text + "\n")
+        if not from_input:
+            buffer.insert_with_tags_by_name(buffer.get_end_iter(), text + "\n")
+        else:
+            buffer.insert_with_tags_by_name(buffer.get_end_iter(), text + "\n", "custom")
 
     # This will be called instead of print
-    def print_to_textview(self, text):
-        self.append_text(text + '\n')
+    def print_to_textview(self, text, from_input=False):
+        self.append_text(text + '\n', from_input)
         GLib.idle_add(self.scroll_to_bottom)
 
     def scroll_to_bottom(self):
