@@ -88,6 +88,10 @@ class TextdungeonActivity(activity.Activity):
         self.textview = Gtk.TextView()
         self.textview.set_wrap_mode(Gtk.WrapMode.WORD)
         self.textview.set_editable(False)
+        self.textview.set_left_margin(10)
+        self.textview.set_right_margin(10)
+        self.textview.set_top_margin(5)
+        self.textview.set_bottom_margin(10)
 
         # Initialize the text buffer and text tag
         # For changing the color of the outputing of the input text
