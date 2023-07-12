@@ -2,7 +2,7 @@
     "openning": "Game on! Get ready for an exciting adventure!",
     "genericMsgs": {
         "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
-        "invalidCmd": "Invalid command.1",
+        "invalidCmd": "Invalid command. Type 'help' for help.",
         "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
         "deadend": "You seem lost, try looking around to find a way",
         "emptyInventory": "Your inventory is empty!",
