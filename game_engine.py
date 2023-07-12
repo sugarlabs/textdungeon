@@ -4,16 +4,11 @@ import shutil
 import os
 import atexit
 
-import gi
-gi.require_version('Gtk', '3.0')
-
 
 class Game:
     def __init__(self, map_file, game_window):
         self.map_file = map_file
-        print(map_file)
         self.data = self.load_map(map_file)
-        print("lol")
         self.game_window = game_window
 
         if not self.data:
@@ -23,6 +18,9 @@ class Game:
         self.player = Player(self.data, self)
         self.current_room = Room(
             self.data["rooms"].get(self.data["currentRoom"]), self.data, self)
+        
+        self.print(self.data['openning'])
+        self.current_room.describe_room()
 
         self.command_palette = {
             'north': self.move_player,
@@ -43,18 +41,18 @@ class Game:
     create one. Read copied file and load it's contents
     game_data"""
     def load_map(self, filename):
-        copy_filename = filename.replace('maps/', 'tmp_')
-        if os.path.exists(copy_filename):
+        self.copy_filename = filename.replace('maps/', 'tmp_')
+        if os.path.exists(self.copy_filename):
             try:
-                with open(copy_filename, 'r') as f:
+                with open(self.copy_filename, 'r') as f:
                     game_data = json.load(f)
                     return game_data
             except json.JSONDecodeError:
                 sys.exit(f'Issue with copy_{filename}')
         else:
             try:
-                shutil.copyfile(filename, copy_filename)
-                with open(copy_filename, 'r') as f:
+                shutil.copyfile(filename, self.copy_filename)
+                with open(self.copy_filename, 'r') as f:
                     game_data = json.load(f)
                     return game_data
             except FileNotFoundError:
@@ -65,7 +63,7 @@ class Game:
     """This function writes changes in game data (game state)
     back to the JSON file"""
     def modify_map(self, game_data):
-        with open(f'copy_{self.map_file}', 'w') as f:
+        with open(self.copy_filename, 'w') as f:
             json.dump(game_data, f, indent=4)
 
     """This function moves the player to a new room in the specified direction.
@@ -116,17 +114,14 @@ class Game:
     """This function allows the player to examine their surroundings,
     giving a description of what's in each direction."""
     def look_around(self):
+        self.current_room.describe_room()
         for direction in ['north', 'south', 'west', 'east']:
             if direction in self.current_room.room_data:
-                self.print(f'To the {direction} you see a {self.current_room.room_data[direction]}')
+                self.print(f'To the {direction} you see the {self.current_room.room_data[direction]}')
+
     """Prints to gtk.textview instead of console"""
     def print(self, text):
         self.game_window.print_to_textview(text)
-
-    def play(self):
-        # Replace print with self.print
-        self.print(self.data['openning'])
-        self.current_room.describe_room()
 
     def process_command(self, command):
         command = command.split()
@@ -153,36 +148,35 @@ class Game:
         if self.current_room.room_data.get('name') == 'exit':
             self.restart_game()
 
-        # Ensure the room is described again after a command is processed.
-        self.current_room.describe_room()
-
     def print_help(self):
         self.print(self.data['genericMsgs']['helpCmd'])
 
     """
-    Delete copy_{self.map_file} and start new game
+    Delete self.copy_filename and start new game
     """
     def restart_game(self):
-        if os.path.exists(f'copy_{self.map_file}'):
-            os.remove(f'copy_{self.map_file}')
-        self.load_map(self.map_file)
+        if os.path.exists(self.copy_filename):
+            os.remove(self.copy_filename)
+            print(self.copy_filename)
+        self.data = self.load_map(self.map_file)
         self.current_room = Room(self.data["rooms"].get('start'), self.data, self)
         self.game_window.clear_textview()
         self.print("Game has successfully been restarted")
+        self.current_room.describe_room()
 
     """
-    Goes to menu without deleting copy_{self.map_file}
+    Goes to menu without deleting self.copy_filename
     so no progress is lost
     """
     def go_to_menu(self):
         self.game_window.create_menu()
 
     """
-    Delete copy_{self.map_file} and go to menu
+    Delete self.copy_filename and go to menu
     """
     def quit_game(self):
-        if os.path.exists(f'copy_{self.map_file}'):
-            os.remove(f'copy_{self.map_file}')
+        if os.path.exists(self.copy_filename):
+            os.remove(self.copy_filename)
         self.game_window.create_menu()
 
 
@@ -246,12 +240,3 @@ class Player:
             self.game.print(self.data['genericMsgs']['emptyInventory'])
         else:
             self.game.print('You have: ' + ', '.join(self.data['inventory']))
-
-
-# if __name__ == '__main__':
-#     game_window = GameWindow()
-#     game = Game('maps/map.json', game_window)
-#     game_window.set_game(game)
-#     game_window.connect("destroy", Gtk.main_quit)
-#     game_window.show_all()
-#     Gtk.main()
