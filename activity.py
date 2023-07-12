@@ -51,6 +51,12 @@ class TextdungeonActivity(activity.Activity):
         # Create three buttons
         for i in range(1, 4):
             button = Gtk.Button(label="Button " + str(i))
+            if i == 1:
+                button = Gtk.Button(label="Easy")
+            elif i == 2:
+                button = Gtk.Button(label="Medium")
+            else:
+                button = Gtk.Button(label="Hard")
             button.connect("clicked", self.on_button_clicked, i)
             self.menu_vbox.pack_start(button, True, True, 0)
 
