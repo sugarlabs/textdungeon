@@ -1,106 +1,35 @@
 {
-    "openning": "Game on! Get ready for an exciting adventure!",
+    "opening": "Hi, amazing explorer! Are you ready for a super fun adventure? Let's start...",
     "genericMsgs": {
-        "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
-        "invalidCmd": "Invalid command. Type 'help' for help.",
-        "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
-        "deadend": "You seem lost, try looking around to find a way",
-        "emptyInventory": "Your inventory is empty!",
-        "noItemHere": "No such item here!"
+        "missingCmd": "Oops, looks like you didn't type a command. Please try again.",
+        "invalidCmd": "Hmm, I don't know that command. Don't worry, if you're not sure what to do, just type 'help'.",
+        "helpCmd": "Commands: n (north), s (south), take [item], look, backpack, help, start over, stop",
+        "deadend": "Uh oh, there's no way to go here. Maybe try looking around for another way.",
+        "emptyInventory": "Your backpack is empty. Let's explore to find fun stuff!",
+        "noItemHere": "That item isn't here. Keep searching!"
     },
-    "currentRoom": "start",
+    "currentRoom": "Home Room",
+    "startRoom": "Home Room",
+    "exitRoom": "Ghost Room",
     "rooms": {
-        "start": {
-            "name": "start",
-            "requiredItem": "none",
-            "failToEnter": "none",
-            "description": "You are in the start room.",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "light"
-            ],
-            "north": "keyRoom",
-            "east": "exit"
+        "Home Room": {
+            "description": "You're in a cozy room with pretty drawings on the wall.",
+            "items": ["carrot"],
+            "north": "Bunny Room"
         },
-        "keyRoom": {
-            "name": "keyRoom",
-            "requiredItem": "light",
-            "failToEnter": "The key room is too dark, you need to find a light before entering",
-            "description": "With the light you can now see and you are able to enter the room",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "key"
-            ],
-            "south": "start",
-            "east" : "swordRoom"
+        "Bunny Room": {
+            "requiredItem": "carrot",
+            "failToEnter": "There's a cute bunny here, but it's hungry. Maybe it needs a carrot?",
+            "entryMsg": "With a carrot in your hand, the bunny hops to you happily. You see a path to a new room.",
+            "description": "This room is full of fluffy bunnies hopping around.",
+            "items": ["ghost costume"],
+            "south": "Home Room",
+            "north": "Ghost Room"
         },
-        "swordRoom": {
-            "name": "swordRoom",
-            "requiredItem": "key",
-            "failToEnter": "The door seems locked, find the key to open it",
-            "description": "You use the key to unlock the heavy door and enter the room of swords",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "sword"
-            ],
-            "south": "exit",
-            "west": "keyRoom"
-        },
-        "exit": {
-            "name": "exit",
-            "requiredItem": "sword",
-            "failToEnter": "There is a dragon in the room, to defeat him you need to find the sword",
-            "description": "You've found the princess and freed her from the dragon!",
-            "npcType": "enemies",
-            "npc": "dragon",
-            "items": []
+        "Ghost Room": {
+            "requiredItem": "ghost costume",
+            "failToEnter": "There's a friendly ghost in this room, but it's shy. Maybe a ghost costume could help you meet it?",
+            "description": "In your ghost costume, the friendly ghost waves at you! You made a new friend and completed your adventure!"
         }
-    },
-    "npcs": {
-        "traders": {
-            "name": "mage",
-            "description": "Has the key and trades it for gold",
-            "desires": "gold",
-            "sells": "key"
-        },
-        "thieves": {
-            "name": "thief",
-            "description": "The thief is looking for gold",
-            "desires": "gold",
-            "toDefeat": "elixir",
-            "youWin": "The elixir seems to work and the thief can't see you",
-            "youCannotLose": "The thief can see you but you have no coins for him to steal",
-            "youLose": "The thief can see you and with a swift motion he takes your gold"
-        },
-        "enemies": {
-            "name": "dragon",
-            "description": "The ultimate dragon",
-            "toDefeat": "sword",
-            "youWin": "You have masterfully used your sword and you've defeated the dragon",
-            "youLose": "Without your weapon you're defenseless and therefore defeated"
-        }
-    },
-    "items": {
-        "gold": {
-            "description": "You can use it for trade"
-        },
-        "light": {
-            "description": "Now you can see in the dark!"
-        },
-        "attackItem": {
-            "description": "Now you can have a fighting chance against mighty enemies"
-        },
-        "key": {
-            "description": "You can now unlock every door"
-        },
-        "book": {
-            "description": "You found the invisibility book, now you are invisible to all thieves"
-        }
-    },
-    "inventory": [
-
-    ]
+    }
 }

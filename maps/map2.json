@@ -1,103 +1,60 @@
 {
-    "openning": "Game on! Get ready for an exciting adventure!",
+    "opening": "Hey there, brave adventurer! Are you ready for a super fun journey? Let's go...",
     "genericMsgs": {
-        "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
-        "invalidCmd": "Invalid command.2",
-        "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
-        "deadend": "You seem lost, try looking around to find a way",
-        "emptyInventory": "Your inventory is empty!",
-        "noItemHere": "No such item here!"
+        "missingCmd": "Oops, looks like you forgot to type a command. Please try again.",
+        "invalidCmd": "Hmm, I don't know that command. If you're not sure what to do, just type 'help'.",
+        "helpCmd": "Commands: n (north), s (south), w (west), e (east), take [item], look, inventory, help, restart, quit",
+        "deadend": "Oh no, there's nowhere to go here. Try looking around for a different path.",
+        "emptyInventory": "Your backpack is empty. Keep exploring to find things!",
+        "noItemHere": "There's no such item here. Keep looking!"
     },
-    "currentRoom": "start",
+    "currentRoom": "Starting Room",
+    "startRoom": "Starting Room",
+    "exitRoom": "Dragon Room",
     "rooms": {
-        "start": {
-            "name": "start",
-            "requiredItem": "none",
-            "failToEnter": "none",
-            "description": "You are in the start room.",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "light"
-            ],
-            "north": "keyRoom",
-            "east": "exit"
+        "Starting Room": {
+            "name": "Starting Room",
+            "description": "You're in a big room with funny drawings on the wall.",
+            "items": ["flashlight"],
+            "north": "Secret Room",
+            "east": "Dragon Room"
         },
-        "keyRoom": {
-            "name": "keyRoom",
-            "requiredItem": "light",
-            "failToEnter": "The key room is too dark, you need to find a light before entering",
-            "description": "With the light you can now see and you are able to enter the room",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "key"
-            ],
-            "south": "start",
-            "east" : "swordRoom"
+        "Secret Room": {
+            "name": "Secret Room",
+            "requiredItem": "flashlight",
+            "failToEnter": "It's too dark in here. You need to find a flashlight before you can go in.",
+            "entryMsg": "With your flashlight on, you can see everything in the room.",
+            "description": "This room is full of cool secret codes on the wall.",
+            "items": ["magic key"],
+            "south": "Starting Room",
+            "east" : "Treasure Room"
         },
-        "swordRoom": {
-            "name": "swordRoom",
-            "requiredItem": "key",
-            "failToEnter": "The door seems locked, find the key to open it",
-            "description": "You use the key to unlock the heavy door and enter the room of swords",
-            "npcType": "none",
-            "npc": "none",
-            "items": [
-                "sword"
-            ],
-            "south": "exit",
-            "west": "keyRoom"
+        "Treasure Room": {
+            "name": "Treasure Room",
+            "requiredItem": "magic key",
+            "failToEnter": "The door is locked. You need a key to open it.",
+            "entryMsg": "Using your magic key, you open the door and find a room full of treasure and a shiny sword.",
+            "description": "There are lots of old chests and shiny things in this room.",
+            "items": ["awesome sword"],
+            "south": "Dragon Room",
+            "west": "Secret Room"
         },
-        "exit": {
-            "name": "exit",
-            "requiredItem": "sword",
-            "failToEnter": "There is a dragon in the room, to defeat him you need to find the sword",
-            "description": "You've found the princess and freed her from the dragon!",
+        "Dragon Room": {
+            "name": "Dragon Room",
+            "requiredItem": "awesome sword",
+            "failToEnter": "There's a big scary dragon in this room. You need to find a sword before you can fight it.",
+            "description": "You see the dragon and swords of fallen warriors on his feet",
+            "emptyDescription": "This room used to belong to a big scary dragon, but not anymore!",
             "npcType": "enemies",
-            "npc": "dragon",
             "items": []
         }
     },
     "npcs": {
-        "traders": {
-            "name": "mage",
-            "description": "Has the key and trades it for gold",
-            "desires": "gold",
-            "sells": "key"
-        },
-        "thieves": {
-            "name": "thief",
-            "description": "The thief is looking for gold",
-            "desires": "gold",
-            "toDefeat": "elixir",
-            "youWin": "The elixir seems to work and the thief can't see you",
-            "youCannotLose": "The thief can see you but you have no coins for him to steal",
-            "youLose": "The thief can see you and with a swift motion he takes your gold"
-        },
         "enemies": {
-            "name": "dragon",
-            "description": "The ultimate dragon",
-            "toDefeat": "sword",
-            "youWin": "You have masterfully used your sword and you've defeated the dragon",
-            "youLose": "Without your weapon you're defenseless and therefore defeated"
-        }
-    },
-    "items": {
-        "gold": {
-            "description": "You can use it for trade"
-        },
-        "light": {
-            "description": "Now you can see in the dark!"
-        },
-        "attackItem": {
-            "description": "Now you can have a fighting chance against mighty enemies"
-        },
-        "key": {
-            "description": "You can now unlock every door"
-        },
-        "book": {
-            "description": "You found the invisibility book, now you are invisible to all thieves"
+            "name": "Big Scary Dragon",
+            "description": "This dragon is big and loud, with fiery breath. But you're a brave adventurer!",
+            "toDefeat": "awesome sword",
+            "youWin": "Great job! With your awesome sword, you beat the dragon and saved the day!"
         }
     },
     "inventory": [

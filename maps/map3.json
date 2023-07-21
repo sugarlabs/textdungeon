@@ -1,106 +1,109 @@
 {
-    "openning": "Game on! Get ready for an exciting adventure!",
+    "opening": "Brace yourself, adventurer! A world of excitement and peril awaits you!",
     "genericMsgs": {
-        "missingCmd": "Whoops, command missing! Remember to enter your desired action before pressing enter.",
-        "invalidCmd": "Invalid command.3",
-        "helpCmd": "Commands: n, s, w, e, take [item], use [item], look, inventory, help, restart, quit",
-        "deadend": "You seem lost, try looking around to find a way",
-        "emptyInventory": "Your inventory is empty!",
-        "noItemHere": "No such item here!"
+        "missingCmd": "Alas, adventurer, your command appears to be lost in the wind. Please, speak your intentions clearly.",
+        "invalidCmd": "Hark! That command is unknown to me.. If you're not sure what to do, just type 'help'.",
+        "helpCmd": "Commands: n (north), s (south), w (west), e (east), take [item], use [item], look, inventory, help, restart, quit",
+        "deadend": "You seem to have strayed from the path, adventurer. Examine your surroundings, perhaps there is a way forward yet.",
+        "emptyInventory": "Oh no, adventurer! Your satchel is as empty as a dragon's hoard after a hero's visit!",
+        "noItemHere": "Your eyes deceive you! There is no such item here!"
     },
-    "currentRoom": "start",
+    "currentRoom": "Enchanted Forest",
+    "startRoom": "Enchanted Forest",
+    "exitRoom": "Door of Destiny",
     "rooms": {
-        "start": {
-            "name": "start",
-            "requiredItem": "none",
-            "failToEnter": "none",
-            "description": "You are in the start room.",
-            "npcType": "none",
-            "npc": "none",
+        "Enchanted Forest": {
+            "name": "Enchanted Forest",
+            "description": "You find yourself in the Enchanted Forest, an oasis of calm before the storm.",
             "items": [
-                "light"
+                "gold"
             ],
-            "north": "keyRoom",
-            "east": "exit"
+            "west": "Merchant's Den",
+            "east": "Thief's Lair"
         },
-        "keyRoom": {
-            "name": "keyRoom",
-            "requiredItem": "light",
-            "failToEnter": "The key room is too dark, you need to find a light before entering",
-            "description": "With the light you can now see and you are able to enter the room",
-            "npcType": "none",
-            "npc": "none",
+        "Door of Destiny": {
+            "name": "Door of Destiny",
+            "requiredItem": "ancient rune",
+            "failToEnter": "Without the Ancient Rune, the massive stone remains unmoved.",
+            "entryMsg": "As you brandish the Archine Rune, ancient magic hums and the massive stone grudgingly parts, revealing the Door of Destiny.",
+            "description": "You stand before the fabled Door of Destiny. What lies beyond?",
             "items": [
-                "key"
-            ],
-            "south": "start",
-            "east" : "swordRoom"
+
+            ]
         },
-        "swordRoom": {
-            "name": "swordRoom",
-            "requiredItem": "key",
-            "failToEnter": "The door seems locked, find the key to open it",
-            "description": "You use the key to unlock the heavy door and enter the room of swords",
-            "npcType": "none",
-            "npc": "none",
+        "Thief's Lair": {
+            "name": "Thief's Lair",
+            "warning": "A menacing presence lurks in the shadows. Entering without the Elixir of Deceit may cost you your gold.",
+            "description": "You tread lightly into the Thief's Lair, eyes alert for signs of danger.",
+            "npcType": "thieves",
+            "npc": "Shadow Rogue",
             "items": [
-                "sword"
+                "torch"
             ],
-            "south": "exit",
-            "west": "keyRoom"
+            "west": "Enchanted Forest"
         },
-        "exit": {
-            "name": "exit",
-            "requiredItem": "sword",
-            "failToEnter": "There is a dragon in the room, to defeat him you need to find the sword",
-            "description": "You've found the princess and freed her from the dragon!",
+        "Merchant's Den": {
+            "name": "Merchant's Den",
+            "entryMsg": "With a soft creak, the door opens to reveal the bustling Merchant's Den.",
+            "description": "You step into the Merchant's Den, a myriad of goods catching your eye.",
+            "npcType": "traders",
+            "npc": "Gnome Trader",
+            "items": [
+
+            ],
+            "east": "Enchanted Forest",
+            "north": "Whispering Corridors"
+        },
+        "Whispering Corridors": {
+            "name": "Whispering Corridors",
+            "requiredItem": "torch",
+            "failToEnter": "Without the Torch, the Corridors are but a wall of unending darkness.",
+            "entryMsg": "With the Torch in hand, the shadows flee, revealing the Whispering Corridors.",
+            "description": "You traverse the Whispering Corridors, the silence broken only by the soft rustle of ancient secrets.",
+            "items": [
+                "ancient blade"
+            ],
+            "south": "Merchant's Den",
+            "west": "Skeleton Queen's Crypt",
+            "north": "Door of Destiny"
+        },
+        "Skeleton Queen's Crypt": {
+            "name": "Skeleton Queen's Crypt",
+            "warning": "A chill wind howls from the Crypt. The Skeleton Queen awaits. Without the Ancient Blade, your fate seems sealed.",
+            "description": "You step into the Skeleton Queen's Crypt, the echo of your steps a grim reminder of the challenge that lies ahead.",
+            "emptyDescription": "The once dreadful Skeleton Queen's Crypt now stands quiet. The chill air has given way to a sense of solemn peace. A faint light filters through cracks in the ceiling, casting long, dancing shadows across the crypt. The stone throne, once occupied by the formidable Skeleton Queen, is now eerily empty. Her skeletal minions have faded back into the dust, leaving only the faint echoes of their clattering bones.",
             "npcType": "enemies",
-            "npc": "dragon",
-            "items": []
+            "npc": "Skeleton Queen",
+            "items": [
+                "ancient rune"
+            ],
+            "east": "Whispering Corridors"
         }
     },
     "npcs": {
         "traders": {
-            "name": "mage",
-            "description": "Has the key and trades it for gold",
+            "name": "Gnome Trader",
+            "description": "Cunning and always on the lookout for a good bargain, the Gnome Trader possesses the Torch and seeks only the shimmer of gold.",
             "desires": "gold",
-            "sells": "key"
+            "sells": "elixir of deceit"
         },
         "thieves": {
-            "name": "thief",
-            "description": "The thief is looking for gold",
+            "name": "Shadow Rogue",
+            "description": "The Shadow Rogue, ever alert and swift as the wind, has a keen eye for shiny objects.",
             "desires": "gold",
-            "toDefeat": "elixir",
-            "youWin": "The elixir seems to work and the thief can't see you",
-            "youCannotLose": "The thief can see you but you have no coins for him to steal",
-            "youLose": "The thief can see you and with a swift motion he takes your gold"
+            "toDefeat": "elixir of deceit",
+            "youWin": "You consume the Elixir of Deceit, cloaking yourself in shadow. The Rogue gazes right through you, unaware of your presence.",
+            "youCannotLose": "The Rogue sees you but grumbles in frustration as he finds nothing worth taking.",
+            "youLose": "The Rogue's eyes gleam as he spots the gold. Quicker than thought, he relieves you of your treasure."
         },
         "enemies": {
-            "name": "dragon",
-            "description": "The ultimate dragon",
-            "toDefeat": "sword",
-            "youWin": "You have masterfully used your sword and you've defeated the dragon",
-            "youLose": "Without your weapon you're defenseless and therefore defeated"
-        }
-    },
-    "items": {
-        "gold": {
-            "description": "You can use it for trade"
-        },
-        "light": {
-            "description": "Now you can see in the dark!"
-        },
-        "attackItem": {
-            "description": "Now you can have a fighting chance against mighty enemies"
-        },
-        "key": {
-            "description": "You can now unlock every door"
-        },
-        "book": {
-            "description": "You found the invisibility book, now you are invisible to all thieves"
+            "name": "Skeleton Queen",
+            "description": "The Skeleton Queen, a legendary terror in these parts, commands the enemies with ruthless efficiency.",
+            "toDefeat": "ancient blade",
+            "youWin": "With a heroic charge, you wield the Ancient Blade and strike down the Skeleton Queen, ending her reign of terror.",
+            "youLose": "Without the Ancient Blade, you stand no chance. The last thing you see is the gleam of triumph in the Skeleton Queen's hollow eyes."
         }
     },
     "inventory": [
-
     ]
 }

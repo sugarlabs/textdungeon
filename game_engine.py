@@ -19,7 +19,7 @@ class Game:
         self.current_room = Room(
             self.data["rooms"].get(self.data["currentRoom"]), self.data, self)
         
-        self.print(self.data['openning'])
+        self.print(self.data['opening'])
         self.current_room.describe_room()
 
         self.command_palette = {
@@ -77,32 +77,38 @@ class Game:
             new_room_data = self.data["rooms"].get(new_room_name)
             required_item = new_room_data.get("requiredItem")
 
-            if required_item != "none":
-                if required_item not in self.data["inventory"]:
-                    self.print(self.data['rooms'][new_room_name]['failToEnter'])
+            if required_item:
+                if self.data.get("inventory"):
+                    if required_item not in self.data.get("inventory"):
+                        self.print(self.data['rooms'][new_room_name].get('failToEnter'))
+                        return
+                    self.print(self.data['rooms'][new_room_name].get('failToEnter'))
                     return
 
-            self.npc_interactions(new_room_name)
-
             self.current_room = Room(new_room_data, self.data, self)
-            self.current_room.describe_room()
+            self.current_room.entering_room()
+
+            self.npc_interactions(new_room_name)
 
     """This function defines the interactions with the enemies-npcs
     and the thieves-npcs in the room."""
     def npc_interactions(self, room_name):
         npc_type = self.data['rooms'][room_name].get('npcType')
-        if npc_type != "none":
+        if npc_type:
             if self.data['npcs'][npc_type].get('toDefeat') in self.data["inventory"]:
                 self.print(self.data['npcs'][npc_type].get('youWin'))
-                if self.data['npcs'][npc_type] == "enemies":
-                    self.data['rooms'][room_name]['npcType'] = 'none'
-                    self.data['rooms'][room_name]['npc'] = 'none'
+                if npc_type == "enemies":
+                    self.data['rooms'][room_name].pop('npcType', None)
+                    self.data['rooms'][room_name]['description'] = self.data['rooms'][room_name].get('emptyDescription')
+                    self.data['rooms'][room_name].pop('warning', None)
+                    self.modify_map(self.data)
             else:
                 if npc_type == "enemies":
                     self.print(self.data['npcs'][npc_type].get('youLose'))
-                    self.restart_game()
+                    self.print("Type \"restart\" to start new game." )
+                    return 0
                 if npc_type == "thieves":
-                    item_to_remove = self.data['npcs'][npc_type]["desires"]
+                    item_to_remove = self.data['npcs'][npc_type].get("desires")
                     if item_to_remove in self.data['inventory']:
                         self.data['inventory'].remove(item_to_remove)
                         self.modify_map(self.data)
@@ -110,6 +116,7 @@ class Game:
                     else:
                         self.print(self.data['npcs'][npc_type].get('youCannotLose'))
                         self.modify_map(self.data)
+        return 1
 
     """This function allows the player to examine their surroundings,
     giving a description of what's in each direction."""
@@ -117,7 +124,10 @@ class Game:
         self.current_room.describe_room()
         for direction in ['north', 'south', 'west', 'east']:
             if direction in self.current_room.room_data:
-                self.print(f'To the {direction} you see the {self.current_room.room_data[direction]}')
+                room_name = self.current_room.room_data.get(direction)
+                self.print(f'To the {direction} you see the {room_name}')
+                if self.data['rooms'][room_name].get('warning'):
+                    self.print(self.data['rooms'][room_name]['warning'])
 
     """Prints to gtk.textview instead of console"""
     def print(self, text):
@@ -145,8 +155,10 @@ class Game:
         else:
             self.print(self.data['genericMsgs']['invalidCmd'])
 
-        if self.current_room.room_data.get('name') == 'exit':
-            self.restart_game()
+        print(self.data['currentRoom'])
+        print("\n\n")
+        if self.data['currentRoom'] == self.data.get("exitRoom"):
+            self.print("You won!\nType \"restart\" to start new game." )
 
     def print_help(self):
         self.print(self.data['genericMsgs']['helpCmd'])
@@ -157,9 +169,9 @@ class Game:
     def restart_game(self):
         if os.path.exists(self.copy_filename):
             os.remove(self.copy_filename)
-            print(self.copy_filename)
         self.data = self.load_map(self.map_file)
-        self.current_room = Room(self.data["rooms"].get('start'), self.data, self)
+        start_room_name = self.data.get("startRoom")
+        self.current_room = Room(self.data["rooms"].get(start_room_name), self.data, self)
         self.game_window.clear_textview()
         self.print("Game has successfully been restarted")
         self.current_room.describe_room()
@@ -187,9 +199,21 @@ class Room:
         self.game = game
 
     """This function is called when player enters a room"""
+    def entering_room(self):
+        if self.room_data.get('entryMsg'):
+            self.game.print(self.room_data['entryMsg'])
+        self.game.print(self.room_data['description'])
+        if self.room_data.get('items'):
+            self.game.print('You see: ' + ', '.join(self.room_data['items']))
+
+    """This function is called to describe room and items in it"""
     def describe_room(self):
         self.game.print(self.room_data['description'])
-        if self.room_data['items']:
+        if self.room_data.get('npcType'):
+            npc_description = self.data['npcs'][self.room_data['npcType']].get('description')
+            if npc_description:
+                self.game.print(npc_description)
+        if self.room_data.get('items'):
             self.game.print('You see: ' + ', '.join(self.room_data['items']))
 
     """This function checks if a move in the given direction is possible.
@@ -208,11 +232,17 @@ class Player:
         self.game = game
 
     def pick_up_item(self, item, room):
-        if item in room.room_data['items']:
-            self.data['inventory'].append(item)
-            room.room_data['items'].remove(item)
-            self.game.modify_map(self.data)
-            self.game.print(f'You now have the {item}.')
+        if room.room_data.get('items'):
+            if item in room.room_data.get('items'):
+                if 'inventory' not in self.data:
+                    self.data['inventory'] = []
+                self.data['inventory'].append(item)
+
+                room.room_data['items'].remove(item)
+                self.game.modify_map(self.data)
+                self.game.print(f'You now have the {item}.')
+            else:
+                self.game.print(self.data['genericMsgs']['noItemHere'])
         else:
             self.game.print(self.data['genericMsgs']['noItemHere'])
 
@@ -236,7 +266,7 @@ class Player:
             self.game.print('You do not have such item in your inventory.')
 
     def check_inventory(self):
-        if not self.data['inventory']:
+        if not self.data.get('inventory'):
             self.game.print(self.data['genericMsgs']['emptyInventory'])
         else:
             self.game.print('You have: ' + ', '.join(self.data['inventory']))
