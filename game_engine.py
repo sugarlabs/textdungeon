@@ -155,8 +155,6 @@ class Game:
         else:
             self.print(self.data['genericMsgs']['invalidCmd'])
 
-        print(self.data['currentRoom'])
-        print("\n\n")
         if self.data['currentRoom'] == self.data.get("exitRoom"):
             self.print("You won!\nType \"restart\" to start new game." )
 
@@ -170,6 +168,7 @@ class Game:
         if os.path.exists(self.copy_filename):
             os.remove(self.copy_filename)
         self.data = self.load_map(self.map_file)
+        self.player.update_data(self.data)
         start_room_name = self.data.get("startRoom")
         self.current_room = Room(self.data["rooms"].get(start_room_name), self.data, self)
         self.game_window.clear_textview()
@@ -230,6 +229,9 @@ class Player:
     def __init__(self, data, game):
         self.data = data
         self.game = game
+
+    def update_data(self, new_data):
+        self.data = new_data
 
     def pick_up_item(self, item, room):
         if room.room_data.get('items'):
