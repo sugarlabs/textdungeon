@@ -1,4 +1,19 @@
-#!/usr/bin/env python
+# Copyright (C) 2023  Dimitios Mylonas
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+# !/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 import gi
@@ -16,51 +31,52 @@ from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.activity.widgets import StopButton
 from game_engine import Game
 
+BUTTON_LABELS = ("Easy", "Medium", "Hard")
+MENU_BACKGROUND_PATH = 'backgrounds/menu_background.png'
+GAME_BACKGROUND_PATH = 'backgrounds/background{}.png'
+MAP_PATH = 'map{}.json'
+BOX_SPACING = 6
+
 
 class TextdungeonActivity(activity.Activity):
     def __init__(self, handle):
-        activity.Activity.__init__(self, handle)
+        super().__init__(handle)
         self.max_participants = 1
 
-        self.build_toolbar()
-
+        self.create_toolbar()
         self.create_menu()
 
     def create_menu(self):
-        # Loading menu background image and creating pixbuf
-        menu_pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            filename='backgrounds/menu_background.jpg',
-            width=Gdk.Screen.width(),
-            height=Gdk.Screen.height(),
-            preserve_aspect_ratio=True)
+        menu_overlay = self.create_overlay_from_image(MENU_BACKGROUND_PATH)
 
-        # Creating image and setting pixbuf
-        menu_img = Gtk.Image.new_from_pixbuf(menu_pixbuf)
+        button_css = """
+        button {
+            background-color: #0B0B45;
+            color: white;
+            font: 20px Roboto, sans-serif;
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+        button:hover {
+            background-color: #23395d;
+        }
+        """
+        # Create a CssProvider
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_data(button_css.encode())
 
-        # Creating overlay and packing image
-        menu_overlay = Gtk.Overlay()
-        menu_overlay.add(menu_img)
-
-        # Create a vertical box to stack widgets
-        self.menu_vbox = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=6)
-        menu_overlay.add_overlay(self.menu_vbox)
-        self.menu_vbox.set_halign(Gtk.Align.CENTER)
-        self.menu_vbox.set_valign(Gtk.Align.CENTER)
-
-        # Create three buttons
-        for i in range(1, 4):
-            button = Gtk.Button(label="Button " + str(i))
-            if i == 1:
-                button = Gtk.Button(label="Easy")
-            elif i == 2:
-                button = Gtk.Button(label="Medium")
-            else:
-                button = Gtk.Button(label="Hard")
+        # Create a button for each level difficulty and add it to the vbox
+        for i, label in enumerate(BUTTON_LABELS, start=1):
+            button = Gtk.Button(label=label)
             button.connect("clicked", self.on_button_clicked, i)
-            self.menu_vbox.pack_start(button, True, True, 0)
+            self.vbox.pack_start(button, True, True, 0)
 
-        # Add overlay as the canvas
+            # Add the CssProvider to the button's style context
+            context = button.get_style_context()
+            context.add_provider(
+                css_provider, Gtk.STYLE_PROVIDER_PRIORITY_USER)
+
+        # Set the canvas to the menu_overlay and display it
         self.set_canvas(menu_overlay)
         menu_overlay.show_all()
 
@@ -69,28 +85,70 @@ class TextdungeonActivity(activity.Activity):
         self.start_game(button_number)
 
     def create_game_screen(self, level):
-        # Loading image and creating pixbuf
+        overlay = self.create_overlay_from_image(
+            GAME_BACKGROUND_PATH.format(level))
+
+        self.create_text_view()
+        self.create_entry_field()
+
+        # Set the canvas to the overlay and display it,
+        # then focus on the entry field
+        self.set_canvas(overlay)
+        overlay.show_all()
+        self.entry.grab_focus()
+
+    def start_game(self, level):
+        self.game = Game(MAP_PATH.format(level), self)
+
+    def clear_textview(self):
+        buffer = self.textview.get_buffer()
+        buffer.set_text("")
+
+    def on_activate(self, widget):
+        command = widget.get_text()  # Retrieve command from entry field
+        self.print_to_textview(command, True)
+        widget.set_text("")  # Clear the entry field
+        self.game.process_command(command)
+
+    def print_to_textview(self, text, from_input=False):
+        buffer = self.textview.get_buffer()
+        # Insert the text to the buffer and scroll to bottom
+        if not from_input:
+            buffer.insert_with_tags_by_name(buffer.get_end_iter(), text + "\n")
+        else:
+            buffer.insert_with_tags_by_name(
+                buffer.get_end_iter(), text + "\n", "custom")
+        GLib.idle_add(self.scroll_to_bottom)
+
+    def scroll_to_bottom(self):
+        buffer = self.textview.get_buffer()
+        mark = buffer.get_insert()
+        GLib.idle_add(self.textview.scroll_to_mark, mark, 0.0, True, 0.0, 1.0)
+
+    def create_overlay_from_image(self, image_path, is_menu=False):
         pixbuf = GdkPixbuf.Pixbuf.new_from_file_at_scale(
-            filename=f'backgrounds/background{level}.jpg',
+            filename=image_path,
             width=Gdk.Screen.width(),
             height=Gdk.Screen.height(),
-            preserve_aspect_ratio=True)
+            preserve_aspect_ratio=False)
 
-        # Creating image and setting pixbuf
         img = Gtk.Image.new_from_pixbuf(pixbuf)
 
-        # Creating overlay and packing image
         overlay = Gtk.Overlay()
         overlay.add(img)
 
-        # Create a vertical box to stack widgets
         self.vbox = Gtk.Box(
-            orientation=Gtk.Orientation.VERTICAL, spacing=6)
+            orientation=Gtk.Orientation.VERTICAL, spacing=BOX_SPACING)
         overlay.add_overlay(self.vbox)
         self.vbox.set_halign(Gtk.Align.CENTER)
         self.vbox.set_valign(Gtk.Align.CENTER)
 
-        # Create a textview to show the game output
+        if is_menu:
+            self.menu_vbox = self.vbox
+
+        return overlay
+
+    def create_text_view(self):
         self.textview = Gtk.TextView()
         self.textview.set_wrap_mode(Gtk.WrapMode.WORD)
         self.textview.set_editable(False)
@@ -99,65 +157,25 @@ class TextdungeonActivity(activity.Activity):
         self.textview.set_top_margin(5)
         self.textview.set_bottom_margin(10)
 
-        # Initialize the text buffer and text tag
-        # For changing the color of the outputing of the input text
         self.text_buffer = self.textview.get_buffer()
         self.custom_tag = self.text_buffer.create_tag(
             "custom", foreground="#424548")
 
-        # Add TextView to a ScrolledWindow
         self.scrolled_window = Gtk.ScrolledWindow()
         self.scrolled_window.set_policy(
             Gtk.PolicyType.AUTOMATIC, Gtk.PolicyType.AUTOMATIC)
-        self.scrolled_window.set_size_request(300, 300)
+        self.scrolled_window.set_size_request(500, 300)
 
         self.scrolled_window.add(self.textview)
         self.vbox.pack_start(self.scrolled_window, True, True, 0)
 
-        # Create an entry for player's input
+    def create_entry_field(self):
         self.entry = Gtk.Entry()
         self.vbox.pack_start(self.entry, False, True, 0)
-
-        # When the enter key is pressed in the entry, call on_activate
         self.entry.connect("activate", self.on_activate)
 
-        # Add overlay as the canvas
-        self.set_canvas(overlay)
-        overlay.show_all()
-        self.entry.grab_focus()
-
-    def start_game(self, level):
-        # Create the game and set it in the game window
-        self.game = Game(f'maps/map{level}.json', self)
-
-    def clear_textview(self):
-        buffer = self.textview.get_buffer()
-        buffer.set_text("")
-
-    def on_activate(self, widget):
-        command = widget.get_text()
-        self.print_to_textview(command, True)
-        widget.set_text("")
-        self.game.process_command(command)
-
-    def append_text(self, text, from_input=False):
-        buffer = self.textview.get_buffer()
-        if not from_input:
-            buffer.insert_with_tags_by_name(buffer.get_end_iter(), text + "\n")
-        else:
-            buffer.insert_with_tags_by_name(buffer.get_end_iter(), text + "\n", "custom")
-
-    # This will be called instead of print
-    def print_to_textview(self, text, from_input=False):
-        self.append_text(text + '\n', from_input)
-        GLib.idle_add(self.scroll_to_bottom)
-
-    def scroll_to_bottom(self):
-        buffer = self.textview.get_buffer()
-        mark = buffer.get_insert()
-        GLib.idle_add(self.textview.scroll_to_mark, mark, 0.0, True, 0.0, 1.0)
-
-    def build_toolbar(self):
+    def create_toolbar(self):
+        # Create a toolbar with an activity button and a stop button
         toolbar_box = ToolbarBox()
         activity_button = ActivityToolbarButton(self)
         toolbar_box.toolbar.insert(activity_button, -1)
@@ -175,4 +193,5 @@ class TextdungeonActivity(activity.Activity):
 
         self.set_toolbar_box(toolbar_box)
         toolbar_box.show()
+
         self.show_all()
