@@ -18,14 +18,14 @@
             "items": [
                 "gold"
             ],
-            "west": "Merchant's Den",
+            "north": "Skeleton Queen's Crypt",
             "east": "Thief's Lair"
         },
         "Door of Destiny": {
             "name": "Door of Destiny",
-            "requiredItem": "ancient rune",
-            "failToEnter": "Without the Ancient Rune, the massive stone remains unmoved.",
-            "entryMsg": "As you brandish the Archine Rune, ancient magic hums and the massive stone grudgingly parts, revealing the Door of Destiny.",
+            "requiredItem": "enchanted rune",
+            "failToEnter": "Without the Enchanted Rune, the massive stone remains unmoved.",
+            "entryMsg": "As you brandish the Enchanted Rune, ancient magic hums and the massive stone grudgingly parts, revealing the Door of Destiny.",
             "description": "You stand before the fabled Door of Destiny. What lies beyond?",
             "items": [
 
@@ -33,14 +33,15 @@
         },
         "Thief's Lair": {
             "name": "Thief's Lair",
-            "warning": "A menacing presence lurks in the shadows. Entering without the Elixir of Deceit may cost you your gold.",
+            "warning": "A menacing presence lurks in the shadows. Entering without the Torch may cost you your gold.",
             "description": "You tread lightly into the Thief's Lair, eyes alert for signs of danger.",
             "npcType": "thieves",
             "npc": "Shadow Rogue",
             "items": [
-                "torch"
+                "ancient blade"
             ],
-            "west": "Enchanted Forest"
+            "west": "Enchanted Forest",
+            "east": "Merchant's Den"
         },
         "Merchant's Den": {
             "name": "Merchant's Den",
@@ -51,8 +52,7 @@
             "items": [
 
             ],
-            "east": "Enchanted Forest",
-            "north": "Whispering Corridors"
+            "west": "Thief's Lair"
         },
         "Whispering Corridors": {
             "name": "Whispering Corridors",
@@ -61,11 +61,9 @@
             "entryMsg": "With the Torch in hand, the shadows flee, revealing the Whispering Corridors.",
             "description": "You traverse the Whispering Corridors, the silence broken only by the soft rustle of ancient secrets.",
             "items": [
-                "ancient blade"
+                "enchanted rune"
             ],
-            "south": "Merchant's Den",
-            "west": "Skeleton Queen's Crypt",
-            "north": "Door of Destiny"
+            "south": "Skeleton Queen's Crypt"
         },
         "Skeleton Queen's Crypt": {
             "name": "Skeleton Queen's Crypt",
@@ -75,9 +73,11 @@
             "npcType": "enemies",
             "npc": "Skeleton Queen",
             "items": [
-                "ancient rune"
+                "elixir of deceit"
             ],
-            "east": "Whispering Corridors"
+            "north": "Whispering Corridors",
+            "south": "Enchanted Forest",
+            "west": "Door of Destiny"
         }
     },
     "npcs": {
@@ -85,7 +85,7 @@
             "name": "Gnome Trader",
             "description": "Cunning and always on the lookout for a good bargain, the Gnome Trader possesses the Torch and seeks only the shimmer of gold.",
             "desires": "gold",
-            "sells": "elixir of deceit"
+            "sells": "torch"
         },
         "thieves": {
             "name": "Shadow Rogue",

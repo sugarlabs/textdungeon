@@ -1,4 +1,5 @@
 {
+    "_comment": "This JSON was built based on the original map structure. Copyright (C) Simon Schampijer",
     "opening": "Hey there, brave adventurer! Are you ready for a super fun journey? Let's go...",
     "genericMsgs": {
         "missingCmd": "Oops, looks like you forgot to type a command. Please try again.",
