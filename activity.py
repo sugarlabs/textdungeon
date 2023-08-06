@@ -46,6 +46,28 @@ class TextdungeonActivity(activity.Activity):
         self.create_toolbar()
         self.create_menu()
 
+    def create_toolbar(self):
+        # Create a toolbar with an activity button and a stop button
+        toolbar_box = ToolbarBox()
+        activity_button = ActivityToolbarButton(self)
+        toolbar_box.toolbar.insert(activity_button, -1)
+        activity_button.show()
+
+        separator = Gtk.SeparatorToolItem()
+        separator.props.draw = False
+        separator.set_expand(True)
+        toolbar_box.toolbar.insert(separator, -1)
+        separator.show()
+
+        stop_button = StopButton(self)
+        toolbar_box.toolbar.insert(stop_button, -1)
+        stop_button.show()
+
+        self.set_toolbar_box(toolbar_box)
+        toolbar_box.show()
+
+        self.show_all()
+
     def create_menu(self):
         menu_overlay = self.create_overlay_from_image(MENU_BACKGROUND_PATH)
 
@@ -97,12 +119,17 @@ class TextdungeonActivity(activity.Activity):
         overlay.show_all()
         self.entry.grab_focus()
 
-    def start_game(self, level):
-        self.game = Game(MAP_PATH.format(level), self)
-
     def clear_textview(self):
         buffer = self.textview.get_buffer()
         buffer.set_text("")
+
+    def create_entry_field(self):
+        self.entry = Gtk.Entry()
+        self.vbox.pack_start(self.entry, False, True, 0)
+        self.entry.connect("activate", self.on_activate)
+
+    def start_game(self, level):
+        self.game = Game(MAP_PATH.format(level), self)
 
     def on_activate(self, widget):
         command = widget.get_text()  # Retrieve command from entry field
@@ -168,30 +195,3 @@ class TextdungeonActivity(activity.Activity):
 
         self.scrolled_window.add(self.textview)
         self.vbox.pack_start(self.scrolled_window, True, True, 0)
-
-    def create_entry_field(self):
-        self.entry = Gtk.Entry()
-        self.vbox.pack_start(self.entry, False, True, 0)
-        self.entry.connect("activate", self.on_activate)
-
-    def create_toolbar(self):
-        # Create a toolbar with an activity button and a stop button
-        toolbar_box = ToolbarBox()
-        activity_button = ActivityToolbarButton(self)
-        toolbar_box.toolbar.insert(activity_button, -1)
-        activity_button.show()
-
-        separator = Gtk.SeparatorToolItem()
-        separator.props.draw = False
-        separator.set_expand(True)
-        toolbar_box.toolbar.insert(separator, -1)
-        separator.show()
-
-        stop_button = StopButton(self)
-        toolbar_box.toolbar.insert(stop_button, -1)
-        stop_button.show()
-
-        self.set_toolbar_box(toolbar_box)
-        toolbar_box.show()
-
-        self.show_all()
